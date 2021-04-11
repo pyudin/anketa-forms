@@ -31,12 +31,9 @@ select {
   display: flex;
   justify-content: space-between;
 }
-/* .invalid {
-  border: 1px solid red;
-} */
 
 .errors {
-  min-height: 20px;
+  color: red;
 }
 
 .full-width {

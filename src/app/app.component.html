@@ -92,17 +92,11 @@
       }"
     />
   </mat-form-field>
-  <div *ngIf="email.invalid && email.touched" class="errors">
-    <small *ngIf="email.errors?.required">Email Required</small>
-    <small *ngIf="email.errors?.wrongEmail && !email.errors?.required"
-      >Wrong Email
-    </small>
-  </div>
 
   <div
     class="item"
     formArrayName="hobbies"
-    *ngFor="let hobby of hobbies.controls"
+    *ngFor="let hobby of hobbies.controls; let i = index"
   >
     <div class="hobby" [formGroup]="hobby">
       <label>Hobby </label>
@@ -140,5 +134,16 @@
   <div class="item">
     <button mat-raised-button color="primary" type="submit">Register</button>
   </div>
+  <div *ngIf="!formIsValid && submitted" class="errors">
+    All fields are required
+  </div>
+  <div *ngIf="email.invalid && email.touched">
+    <small
+      class="errors"
+      *ngIf="email.errors?.wrongEmail && !email.errors?.required"
+      >Wrong Email
+    </small>
+  </div>
 </form>
+
 {{ registrationForm.value | json }}
