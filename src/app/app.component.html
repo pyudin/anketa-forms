@@ -1,63 +1,102 @@
 <div class="title">Registration form</div>
 <form class="regForm" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-  <div class="item">
-    <lable>FirstName</lable>
+  <mat-form-field class="full-width" appearance="fill">
+    <mat-label>FirstName</mat-label>
     <input
+      matInput
       formControlName="firstName"
-      type="text"
-      [class.invalid]="firstName.invalid && firstName.touched"
+      [ngClass]="{
+        invalid:
+          (firstName.invalid && submitted) ||
+          (firstName.invalid && firstName.touched)
+      }"
     />
-  </div>
+  </mat-form-field>
 
-  <div class="item">
-    <lable>LastName</lable>
+  <mat-form-field class="full-width" appearance="fill">
+    <mat-label>LastName</mat-label>
     <input
+      matInput
       formControlName="lastName"
-      type="text"
-      [class.invalid]="lastName.invalid && lastName.touched"
+      [ngClass]="{
+        invalid:
+          (lastName.invalid && submitted) ||
+          (lastName.invalid && lastName.touched)
+      }"
     />
-  </div>
+  </mat-form-field>
 
-  <div class="item">
-    <lable>Date of birthday</lable>
-    <input type="date" />
-  </div>
-
-  <div class="item">
-    <lable>Framework</lable>
-    <select
-      formControlName="framework"
-      name="framework"
-      (change)="onFrameworkChange($event)"
-    >
-      <option *ngFor="let framework of frameworks" [value]="framework.value">
-        {{ framework.name }}
-      </option>
-    </select>
-  </div>
-
-  <div class="item">
-    <lable>Framework version</lable>
-    <select formControlName="frameworkVersion" name="frameworkVersion" disabled>
-      <option *ngFor="let version of versions" value="version">
-        {{ version }}
-      </option>
-    </select>
-  </div>
-
-  <div class="item">
-    <lable>Email</lable>
+  <!-- <div class="item">
+    <label>Date of birthday</label>
     <input
-      formControlName="email"
-      type="text"
-      [class.invalid]="email.invalid && email.touched"
+      formControlName="dateOfBirth"
+      type="date"
+      [class.invalid]="dateOfBirth.invalid && dateOfBirth.touched"
     />
-    <div *ngIf="email.invalid && email.touched" class="errors">
-      <small *ngIf="email.errors?.required">Email Required</small>
-      <small *ngIf="email.errors?.wrongEmail && !email.errors?.required"
-        >Wrong Email
-      </small>
-    </div>
+  </div> -->
+
+  <mat-form-field class="full-width" appearance="fill">
+    <mat-label>Date of birthday</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      formControlName="dateOfBirth"
+      format="yyyy-MM-dd"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Framework</mat-label>
+    <mat-select
+      formControlName="framework"
+      (selectionChange)="onFrameworkChange($event)"
+      [class.invalid]="
+        (framework.invalid && framework.touched) ||
+        (framework.invalid && submitted)
+      "
+    >
+      <mat-option
+        *ngFor="let framework of frameworks"
+        [value]="framework.value"
+      >
+        {{ framework.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Framework version</mat-label>
+    <mat-select
+      formControlName="frameworkVersion"
+      [class.invalid]="
+        (frameworkVersion.invalid && frameworkVersion.touched) ||
+        (frameworkVersion.invalid && submitted)
+      "
+    >
+      <mat-option *ngFor="let version of versions" [value]="version">
+        {{ version }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="full-width" appearance="fill">
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      formControlName="email"
+      [ngClass]="{
+        invalid:
+          (email.invalid && submitted) || (email.invalid && email.touched)
+      }"
+    />
+  </mat-form-field>
+  <div *ngIf="email.invalid && email.touched" class="errors">
+    <small *ngIf="email.errors?.required">Email Required</small>
+    <small *ngIf="email.errors?.wrongEmail && !email.errors?.required"
+      >Wrong Email
+    </small>
   </div>
 
   <div
@@ -66,43 +105,40 @@
     *ngFor="let hobby of hobbies.controls"
   >
     <div class="hobby" [formGroup]="hobby">
-      <lable>Hobby </lable>
+      <label>Hobby </label>
+
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Hobby</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Select duration...</mat-label>
+        <mat-select formControlName="duration">
+          <mat-option *ngFor="let duration of hobbyDuration" [value]="duration">
+            {{ duration }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
       <input formControlName="name" type="text" />
-      <select formControlName="duration" type="text">
-        <option value="2 month">2 months</option>
-        <option value="6 month">6 months</option>
-        <option value="1 year">1 year</option>
-        <option value="over 2 years">over 2 years</option>
+      <select formControlName="duration" name="hobby">
+        <option *ngFor="let duration of hobbyDuration" [value]="duration">
+          {{ duration }}
+        </option>
       </select>
       <button type="button" (click)="removeHobby(i)">X</button>
     </div>
   </div>
+
   <div class="item">
-    <button type="button" (click)="addHobby()">Add Hobby</button>
+    <button mat-raised-button type="button" (click)="addHobby()">
+      Add Hobby
+    </button>
   </div>
 
   <div class="item">
-    <button type="submit">Register</button>
+    <button mat-raised-button color="primary" type="submit">Register</button>
   </div>
 </form>
 {{ registrationForm.value | json }}
-
-<button mat-button color="warn">Hello material</button>
-
-<form class="example-form">
-  <mat-form-field class="example-full-width">
-    <mat-label>Favorite food</mat-label>
-    <input matInput placeholder="Ex. Pizza" value="Sushi" />
-  </mat-form-field>
-
-  <mat-form-field class="example-full-width">
-    <mat-label>Leave a comment</mat-label>
-    <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
-  </mat-form-field>
-</form>
-
-<mat-form-field hintLabel="Max 10 characters" appearance="fill">
-  <mat-label>Enter some input</mat-label>
-  <input matInput #input maxlength="10" placeholder="Ex. Nougat" />
-  <mat-hint align="end">{{ input.value?.length || 0 }}/10</mat-hint>
-</mat-form-field>

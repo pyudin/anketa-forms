@@ -31,10 +31,14 @@ select {
   display: flex;
   justify-content: space-between;
 }
-.invalid {
+/* .invalid {
   border: 1px solid red;
-}
+} */
 
 .errors {
   min-height: 20px;
+}
+
+.full-width {
+  width: 100%;
 }
